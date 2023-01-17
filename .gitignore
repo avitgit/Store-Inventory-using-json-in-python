@@ -1,129 +1,50 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+import json
+import time
+#reading file from json file
+fd=open('inventory_data2.json','r')
+js=fd.read()
+fd.close()
+data=json.loads(js)
+for key in data.keys():
+    print(key,':',data[key]['Name'],' | ',data[key]['Price'],' | ',data[key]['Qn'])
+user_name=input("Enter your name          :")
+user_ph_no=input("Enter your phone number :")
+user_email=input("Enter your email id     :")
+prod_id=input("Enter Product Id           :")
+prod_qn=int(input("Enter Quantity         :"))
+sales=user_name+','+user_ph_no+','+user_email+','+prod_id
+#if we have enough quantity
+if data[prod_id]['Qn']>=prod_qn:
+    data[prod_id]['Qn']=data[prod_id]['Qn']-prod_qn
+    print("-----------BILL-----------")
+    print("Product_Name  : ",data[prod_id]["Name"])
+    print("Product_Price : ",data[prod_id]["Price"])
+    print("Product_Quant.: ",prod_qn)
+    print("Total Amount  : ",prod_qn*data[prod_id]["Price"])
+    sales=sales+','+data[prod_id]['Name']+','+str(prod_qn*data[prod_id]["Price"])+'\n'
+    fd=open('sales_data.txt','a')
+    fd.write(sales)
+    fd.close()
 
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
+else:
+    print("Sorry, We're not having enough quantity")
+    print("We're having only ",data[prod_id]["Qn"])
+    ans=input("Enter Y to purchase")
+    if(ans=='Y' or ans=='y'):
+        print("-----------BILL-----------")
+        print("Product_Name  : ",data[prod_id]["Name"])
+        print("Product_Price : ",data[prod_id]["Price"])
+        print("Product_Quant.: ",data[prod_id]["Qn"])
+        print("Total Amount  : ",data[prod_id]["Qn"]*data[prod_id]["Price"])
+        
+        sales=sales+','+data[prod_id]['Name']+','+str(data[prod_id]["Qn"]*data[prod_id]["Price"])+'\n'
+        data[prod_id]['Qn']=0
+        fd=open('sales_data.txt','a')
+        fd.write(sales)
+        fd.close()
+    else:
+          print('Thanks')
+js=json.dumps(data)
+fd=open('inventory_data2.json','w')
+fd.write(js)
+fd.close()
