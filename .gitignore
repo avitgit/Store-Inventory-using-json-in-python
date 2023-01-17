@@ -1,5 +1,4 @@
 import json
-import time
 #reading file from json file
 fd=open('inventory_data2.json','r')
 js=fd.read()
